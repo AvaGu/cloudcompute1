@@ -1,0 +1,7 @@
+1 Solve enchant import 
+	install python2.6
+	install pyenchant for 2.6   this installs enchant for me
+
+2 Solve nltk.download()     tk_version 8.4 8.5
+	install python2.6.6
+
