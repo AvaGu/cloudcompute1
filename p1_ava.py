@@ -71,26 +71,58 @@ def analyzeWord(search_word):
     #print(search_results['responseData']['results'])
     url = ""
     count = 0
+    union_map = {}
+    union_list = []
+    intersect_map = {}
+    intersect_list = []
+
+
     for link in l:
         count += 1
         url = link["url"]
-        print "\tFor search result url : " + url
+        # print "\tFor search result url : " + url
         html = urlopen(url).read()
         raw = nltk.clean_html(html)
         tokens = nltk.word_tokenize(raw)
-    #print tokens
         my_dict = {}
         my_dict = content_fraction(tokens)
-    #print my_dict
 
         for n in range(top_num_words):
             if my_dict:
                 m = max(my_dict, key = my_dict.get)
-                #print type(m)
-                print "\t\t " + str(n +1) + " : " +  str(m) + " : " +  str(my_dict[m])
-                # print my_dict[m]
+
+                # print "\t\t " + str(n +1) + " : " +  str(m) + " : " +  str(my_dict[m])
+                if m in union_map:
+                    tmp = union_map[m]
+                    union_map[m] = tmp + my_dict[m]
+                else:
+                    union_map[m] = my_dict[m]
+
+                if m in intersect_map:
+                    intersect_map[m] += 1
+                else:
+                    intersect_map[m] = 1 
                 my_dict.pop(m, None)
 
 
-analyzeWord("opera")
+    for n in range(len(union_map)):
+        m = max(union_map, key = union_map.get)
+        union_list.append((m, union_map[m]))
+        union_map.pop(m, None)
+
+    for im in intersect_map:
+        if (intersect_map[im] == search_result_size):
+            intersect_list.append(im)
+    return union_list, intersect_list
+
+
+(union_list, intersect_list) = analyzeWord("opera")
+
+# for us in union_list:
+#     print str(us[0]) + " : " + str(us[1])
+# for il in intersect_list:
+    # print il
+
+
+print "Done"
 
