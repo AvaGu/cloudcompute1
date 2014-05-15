@@ -80,7 +80,8 @@ def analyzeWord(search_word):
     for link in l:
         count += 1
         url = link["url"]
-        # print "\tFor search result url : " + url
+        #print "\tFor search result url : " + url
+        url = link["unescapedUrl"]
         html = urlopen(url).read()
         raw = nltk.clean_html(html)
         tokens = nltk.word_tokenize(raw)
@@ -110,19 +111,30 @@ def analyzeWord(search_word):
         union_list.append((m, union_map[m]))
         union_map.pop(m, None)
 
-    for im in intersect_map:
-        if (intersect_map[im] == search_result_size):
-            intersect_list.append(im)
+    for im in range(len(intersect_map)):
+        m = max(intersect_map, key = intersect_map.get)
+        intersect_list.append((m, intersect_map[m]))
+        intersect_map.pop(m, None)
+        # if (intersect_map[im] == search_result_size):
+            # intersect_list.append(im)
     return union_list, intersect_list
 
 
-(union_list, intersect_list) = analyzeWord("opera")
+def doWord(word):
+    (union_list, intersect_list) = analyzeWord(word)
+    print ""
+    print "union result: " 
+    for us in union_list:
+        print str(us[0]) + " : " + str(us[1])
+    print ""
+    print "intersect result: " 
+    for il in intersect_list:
+        print str(il[0]) + " : " + str(il[1])
+    # for il in intersect_list:
+        # print il
 
-# for us in union_list:
-#     print str(us[0]) + " : " + str(us[1])
-# for il in intersect_list:
-    # print il
-
-
+words = ["opera"]
+for word in words:
+    doWord(word)
 print "Done"
 
